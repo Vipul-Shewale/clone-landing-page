@@ -1,0 +1,645 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLONE</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #03050a;
+            --bg-card: #0a0e17;
+            --bg-black: #000000;
+            --accent-pink: #ffffff;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .watermark-bg {
+            display: none;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .sub-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: block;
+            text-align: center;
+            font-weight: 700;
+        }
+        
+        .sub-label.pink-dot::before {
+            content: '♦';
+            color: var(--accent-pink);
+            margin-right: 8px;
+            font-size: 0.7rem;
+        }
+
+        nav {
+            position: absolute;
+            top: 60px;
+            width: 100%;
+            padding: 40px 24px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-logo-img {
+            height: 72px;
+            width: auto;
+            display: block;
+            filter: invert(1);
+            mix-blend-mode: screen;
+        }
+
+        .hero-section {
+            padding-top: 120px;
+            padding-bottom: 0px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-section {
+            padding: 80px 0 120px 0;
+            text-align: center;
+        }
+
+        /* TIMER GRID */
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            max-width: 600px;
+            margin: 40px auto 0 auto;
+            padding: 0 16px;
+        }
+
+        .time-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 32px 16px;
+            text-align: center;
+        }
+
+        .time-box span {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--accent-pink);
+            display: block;
+            line-height: 1;
+            margin-bottom: 12px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .time-box label {
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .collection-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .collection-section > p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            text-align: center;
+            line-height: 2.4; 
+            max-width: 500px;
+            margin: 0 auto 64px auto;
+        }
+
+        /* COLLECTION GRID */
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px; 
+            max-width: 600px; 
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            text-align: left;
+            cursor: pointer;
+        }
+
+   .product-card img {
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        object-fit: contain;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: block;
+        background-color: transparent;
+        image-rendering: auto;
+        filter: none;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .product-card:hover img {
+        /* Hover par image thodi badi hogi */
+        transform: scale(1.06); 
+    }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .product-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 400;
+            line-height: 1.3;
+            margin: 0;
+            text-align: left;
+        }
+
+        .status-soon {
+            font-size: .65rem;
+            letter-spacing: .2em;
+            color: var(--accent-pink);
+            text-transform: uppercase;
+        }
+
+        .product-card p {
+            font-size: .7rem;
+            letter-spacing: .15em;
+            color: var(--text-muted);
+            text-align: left;
+            margin: 0;
+        }
+
+        /* Waitlist Section */
+        .waitlist-section {
+            padding: 80px 0 120px 0;
+            text-align: center;
+        }
+
+        .waitlist-intro p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 48px;
+            text-align: center;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 56px 48px;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .form-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition-smooth);
+            outline: none;
+            text-align: center;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: #ffffff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            margin-top: 16px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.15);
+        }
+
+        .spam-notice {
+            display: block;
+            text-align: center;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 24px;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .success-message h3 {
+            color: var(--accent-pink);
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        footer {
+            padding: 60px 0;
+            text-align: center;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .footer-links span {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        footer p {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .form-card {
+                margin: 0 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .timer-grid { 
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 8px; 
+            }
+            .collection-grid {
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 8px;
+            }
+            .time-box { 
+                padding: 16px 6px; 
+                border-radius: 8px; 
+            }
+            .time-box span { 
+                font-size: 1.2rem; 
+                margin-bottom: 6px; 
+            }
+            .time-box label { 
+                font-size: 0.4rem; 
+            }
+            .product-card {
+                padding: 12px;
+            }
+            .product-header h3 {
+                font-size: 0.9rem;
+            }
+            .status-soon {
+                font-size: 0.55rem;
+            }
+            .product-card p {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+    <head>
+ <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+</head>
+</head>
+<body>
+
+    <nav>
+        <img src="images/logo01.png" alt="CLONE™ Logo" class="nav-logo-img">
+    </nav>
+
+    <header class="hero-section container"></header>
+
+    <section class="countdown-section container">
+        <span class="sub-label">THE DROP</span>
+        <h2>Launching in</h2>
+        
+        <div class="timer-grid">
+            <div class="time-box">
+                <span id="days">00</span>
+                <label>Days</label>
+            </div>
+            <div class="time-box">
+                <span id="hours">00</span>
+                <label>Hours</label>
+            </div>
+            <div class="time-box">
+                <span id="minutes">00</span>
+                <label>Minutes</label>
+            </div>
+            <div class="time-box">
+                <span id="seconds">00</span>
+                <label>Seconds</label>
+            </div>
+        </div>
+    </section>
+
+    <section class="collection-section container">
+        <span class="sub-label">FIRST COLLECTION</span>
+        <h2>Crafted for the few</h2>
+        <p>Two silhouettes<br>One signature<br>Hand finished in limited runs<br>Individually numbered</p>
+
+        <div class="collection-grid">
+            <div class="product-card">
+                <img src="images/cap01.png" alt="Signature Cap Midnight" onerror="this.src='https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=500&q=80'">
+                <div class="product-header">
+                    <h3>Signature Cap<br>Midnight</h3>
+                    <span class="status-soon">SOON</span>
+                </div>
+                <p>EDITION &nbsp;•&nbsp; 01 / NVY</p>
+            </div>
+            
+            <div class="product-card">
+                <img src="images/cap02.png" alt="Signature Cap Fog" onerror="this.src='https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=500&q=80'">
+                <div class="product-header">
+                    <h3>Signature Cap<br>Fog</h3>
+                    <span class="status-soon">SOON</span>
+                </div>
+                <p>EDITION &nbsp;•&nbsp; 02 / FOG</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="waitlist-section container">
+        <div class="waitlist-intro">
+            <span class="sub-label">JOIN CLONE™</span>
+            <h2>Reserve your access</h2>
+            <p>Limited spots. Once the list closes, the drop goes live to members first.</p>
+        </div>
+
+        <div class="form-card">
+            <span class="sub-label" style="text-align: center;">Private Waitlist</span>
+            <h3>Secure your access</h3>
+            
+            <form id="waitlistForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="fullName" placeholder="Your name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="you@domain.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="tel" id="mobile" placeholder="+91 00000 00000" required>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">JOIN THE WAITLIST</button>
+                <span class="spam-notice">No spam. Early access only.</span>
+            </form>
+
+            <div id="successMessage" class="success-message">
+                <h3>You're on the list.</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Your exclusive access is secured.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+            <div class="footer-links">
+    <a href="https://instagram.com/cloneclothing__" target="_blank" class="sub-label" style="text-decoration:none;border:none;color:var(--text-muted);margin-bottom:0;display:inline-flex;align-items:center;gap:8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        INSTAGRAM
+    </a>
+</div>
+            <p>© 2026 CLONE™ — ALL RIGHTS RESERVED</p>
+        </div>
+    </footer>
+
+    <script>
+        const targetDateStr = "2026-07-01T12:00:00+05:30"; 
+        const dropDate = new Date(targetDateStr).getTime();
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = dropDate - now;
+
+            if (distance < 0) {
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        const form = document.getElementById('waitlistForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+
+        const SHEETDB_URL = "https://sheetdb.io/api/v1/eipxwenuhv0ue";
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = 'PROCESSING...';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+
+            const payload = {
+                data: [
+                    {
+                        "Timestamp": new Date().toLocaleString(),
+                        "Full Name": document.getElementById('fullName').value.trim(),
+                        "Email": document.getElementById('email').value.trim(),
+                        "Mobile Number": document.getElementById('mobile').value.trim()
+                    }
+                ]
+            };
+
+            try {
+                const response = await fetch(SHEETDB_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && (result.created === 1 || result.created > 0)) {
+                    showSuccess();
+                } else {
+                    throw new Error(result.error || "Header mismatch or restricted access");
+                }
+
+            } catch (error) {
+                console.error('Submission Error:', error);
+                submitBtn.innerText = "ERROR. TRY AGAIN";
+                submitBtn.style.background = "#ef4444"; 
+                submitBtn.style.color = "#ffffff";
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                
+                setTimeout(() => {
+                    submitBtn.innerText = originalText;
+                    submitBtn.style.background = "#ffffff";
+                    submitBtn.style.color = "#000000";
+                }, 4000);
+            }
+        });
+
+        function showSuccess() {
+            form.style.display = 'none';
+            successMessage.style.display = 'block';
+            
+            successMessage.style.opacity = '0';
+            successMessage.style.transform = 'scale(0.9)';
+            successMessage.style.transition = 'all 0.4s ease';
+            
+            setTimeout(() => {
+                successMessage.style.opacity = '1';
+                successMessage.style.transform = 'scale(1)';
+            }, 50);
+
+            form.reset();
+        }
+    </script>
+</body>
+</html>
+
+
+
