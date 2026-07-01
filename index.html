@@ -84,11 +84,9 @@
         }
 
         nav {
-            position: absolute;
-            top: 60px;
+            position: relative;
             width: 100%;
-            padding: 40px 24px;
-            z-index: 100;
+            padding: 56px 24px 0px 24px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -181,20 +179,22 @@
         .product-card {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
-            border-radius: 16px;
+            border-radius: 24px;
             padding: 24px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             text-align: left;
             cursor: pointer;
+            text-decoration: none;
+            color: inherit;
         }
 
    .product-card img {
         width: 100%;
         aspect-ratio: 2 / 3;
-        object-fit: contain;
-        border-radius: 8px;
+        object-fit: cover;
+        border-radius: 28px;
         margin-bottom: 20px;
         display: block;
         background-color: transparent;
@@ -419,20 +419,16 @@
             }
         }
     </style>
-    <head>
- <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-</head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 </head>
 <body>
 
     <nav>
         <img src="images/logo01.png" alt="CLONE™ Logo" class="nav-logo-img">
     </nav>
-
-    <header class="hero-section container"></header>
 
     <section class="countdown-section container">
         <span class="sub-label">THE DROP</span>
@@ -464,23 +460,23 @@
         <p>Two silhouettes<br>One signature<br>Hand finished in limited runs<br>Individually numbered</p>
 
         <div class="collection-grid">
-            <div class="product-card">
-                <img src="images/cap01.png" alt="Signature Cap Midnight" onerror="this.src='https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=500&q=80'">
+            <a href="https://shop.cloneclothing.com/products/signature-cap-midnight" target="_blank" rel="noopener noreferrer" class="product-card">
+                <img src="images/cap01.png" alt="Signature Cap Midnight" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=500&q=80'">
                 <div class="product-header">
                     <h3>Signature Cap<br>Midnight</h3>
                     <span class="status-soon">SOON</span>
                 </div>
                 <p>EDITION &nbsp;•&nbsp; 01 / NVY</p>
-            </div>
-            
-            <div class="product-card">
-                <img src="images/cap02.png" alt="Signature Cap Fog" onerror="this.src='https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=500&q=80'">
+            </a>
+
+            <a href="https://shop.cloneclothing.com/products/signature-cap-fog" target="_blank" rel="noopener noreferrer" class="product-card">
+                <img src="images/cap02.png" alt="Signature Cap Fog" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=500&q=80'">
                 <div class="product-header">
                     <h3>Signature Cap<br>Fog</h3>
                     <span class="status-soon">SOON</span>
                 </div>
                 <p>EDITION &nbsp;•&nbsp; 02 / FOG</p>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -498,7 +494,7 @@
             <form id="waitlistForm">
                 <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" id="fullName" placeholder="Your name" required>
+                    <input type="text" id="fullName" placeholder="Your name" required minlength="2">
                 </div>
                 
                 <div class="form-group">
@@ -508,7 +504,7 @@
                 
                 <div class="form-group">
                     <label>Mobile Number</label>
-                    <input type="tel" id="mobile" placeholder="+91 00000 00000" required>
+                    <input type="tel" id="mobile" placeholder="+91 00000 00000" required pattern="[+\d\s\-]{7,15}">
                 </div>
 
                 <button type="submit" class="btn" id="submitBtn">JOIN THE WAITLIST</button>
@@ -523,18 +519,19 @@
     </section>
 
     <footer>
+        <div class="container">
             <div class="footer-links">
-    <a href="https://instagram.com/cloneclothing__" target="_blank" class="sub-label" style="text-decoration:none;border:none;color:var(--text-muted);margin-bottom:0;display:inline-flex;align-items:center;gap:8px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-        INSTAGRAM
-    </a>
-</div>
+                <a href="https://instagram.com/cloneclothing__" target="_blank" rel="noopener noreferrer" class="sub-label" style="text-decoration:none;border:none;color:var(--text-muted);margin-bottom:0;display:inline-flex;align-items:center;gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                    INSTAGRAM
+                </a>
+            </div>
             <p>© 2026 CLONE™ — ALL RIGHTS RESERVED</p>
         </div>
     </footer>
 
     <script>
-        const targetDateStr = "2026-07-01T12:00:00+05:30"; 
+        const targetDateStr = "2026-07-16T00:00:00+05:30";
         const dropDate = new Date(targetDateStr).getTime();
 
         function updateTimer() {
@@ -546,6 +543,7 @@
                 document.getElementById("hours").innerText = "00";
                 document.getElementById("minutes").innerText = "00";
                 document.getElementById("seconds").innerText = "00";
+                clearInterval(timerInterval);
                 return;
             }
 
@@ -560,18 +558,20 @@
             document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
         }
 
-        setInterval(updateTimer, 1000);
+        const timerInterval = setInterval(updateTimer, 1000);
         updateTimer();
 
         const form = document.getElementById('waitlistForm');
         const submitBtn = document.getElementById('submitBtn');
         const successMessage = document.getElementById('successMessage');
+        let resetTimer = null;
 
         const SHEETDB_URL = "https://sheetdb.io/api/v1/eipxwenuhv0ue";
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+            if (resetTimer) { clearTimeout(resetTimer); resetTimer = null; }
+
             const originalText = submitBtn.innerText;
             submitBtn.innerText = 'PROCESSING...';
             submitBtn.disabled = true;
@@ -580,7 +580,7 @@
             const payload = {
                 data: [
                     {
-                        "Timestamp": new Date().toLocaleString(),
+                        "Timestamp": new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }),
                         "Full Name": document.getElementById('fullName').value.trim(),
                         "Email": document.getElementById('email').value.trim(),
                         "Mobile Number": document.getElementById('mobile').value.trim()
@@ -598,9 +598,13 @@
                     body: JSON.stringify(payload)
                 });
 
+                const contentType = response.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    throw new Error("Unexpected server response");
+                }
                 const result = await response.json();
 
-                if (response.ok && (result.created === 1 || result.created > 0)) {
+                if (response.ok && result.created > 0) {
                     showSuccess();
                 } else {
                     throw new Error(result.error || "Header mismatch or restricted access");
@@ -614,10 +618,11 @@
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
                 
-                setTimeout(() => {
+                resetTimer = setTimeout(() => {
                     submitBtn.innerText = originalText;
                     submitBtn.style.background = "#ffffff";
                     submitBtn.style.color = "#000000";
+                    resetTimer = null;
                 }, 4000);
             }
         });
