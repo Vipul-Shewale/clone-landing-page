@@ -64,6 +64,44 @@
             text-align: center;
         }
 
+        /* TEXT ROLL HOVER (headings only, decorated by JS on hover-capable devices) */
+        .text-roll {
+            text-transform: uppercase;
+        }
+        .text-roll.roll-ready {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: default;
+            line-height: 1.15;
+        }
+        .text-roll .roll-row {
+            display: block;
+        }
+        .text-roll .roll-row-bottom {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+        .text-roll .roll-letter {
+            display: inline-block;
+            white-space: pre;
+            transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .text-roll .roll-row-bottom .roll-letter {
+            transform: translateY(100%);
+        }
+        .text-roll.roll-ready:hover .roll-row-top .roll-letter,
+        .text-roll.roll-ready.roll-active .roll-row-top .roll-letter {
+            transform: translateY(-100%);
+        }
+        .text-roll.roll-ready:hover .roll-row-bottom .roll-letter,
+        .text-roll.roll-ready.roll-active .roll-row-bottom .roll-letter {
+            transform: translateY(0);
+        }
+
         .sub-label {
             font-family: 'Inter', sans-serif;
             font-size: 0.65rem;
@@ -92,12 +130,67 @@
             align-items: center;
         }
 
+        .nav-logo-wrap {
+            position: relative;
+            display: inline-block;
+        }
+
         .nav-logo-img {
             height: 72px;
             width: auto;
             display: block;
             filter: invert(1);
             mix-blend-mode: screen;
+            animation: logoReveal 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .nav-logo-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg, transparent 30%, rgba(255, 170, 200, 0.95) 50%, transparent 70%);
+            background-size: 250% 100%;
+            background-repeat: no-repeat;
+            -webkit-mask-image: url('images/logo01-mask.png');
+            mask-image: url('images/logo01-mask.png');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+            mask-mode: alpha;
+            pointer-events: none;
+            animation: logoShimmer 5s ease-in-out 1.2s infinite;
+        }
+
+        @keyframes logoReveal {
+            from {
+                opacity: 0;
+                transform: translateY(-12px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes logoShimmer {
+            0% { background-position: -150% 0; }
+            40% { background-position: 150% 0; }
+            100% { background-position: 150% 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .nav-logo-img {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+            .nav-logo-wrap::after {
+                animation: none;
+                background-position: 150% 0;
+            }
         }
 
         .hero-section {
@@ -132,14 +225,42 @@
             text-align: center;
         }
 
-        .time-box span {
+        .time-box .digit-group {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
             color: var(--accent-pink);
-            display: block;
+            display: flex;
+            justify-content: center;
             line-height: 1;
             margin-bottom: 12px;
             font-variant-numeric: tabular-nums;
+        }
+
+        .digit-box {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            width: 1ch;
+            height: 1.1em;
+        }
+
+        .digit-box .digit {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.4s ease;
+        }
+
+        .digit-box .digit.entering {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+
+        .digit-box .digit.leaving {
+            transform: translateY(-100%);
+            opacity: 0;
         }
 
         .time-box label {
@@ -190,22 +311,100 @@
             color: inherit;
         }
 
-   .product-card img {
-        width: 100%;
-        aspect-ratio: 2 / 3;
-        object-fit: cover;
+    .product-gallery {
+        position: relative;
+        margin-bottom: 12px;
+    }
+
+    .gallery-clip {
         border-radius: 28px;
-        margin-bottom: 20px;
-        display: block;
-        background-color: transparent;
-        image-rendering: auto;
-        filter: none;
+        overflow: hidden;
+    }
+
+    .gallery-track {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
         transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .product-card:hover img {
+    .gallery-track::-webkit-scrollbar {
+        display: none;
+    }
+
+    .gallery-slide {
+        flex: 0 0 100%;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        scroll-snap-align: start;
+        display: block;
+        background-color: transparent;
+    }
+
+    .product-card:hover .gallery-track {
         /* Hover par image thodi badi hogi */
-        transform: scale(1.06); 
+        transform: scale(1.06);
+    }
+
+    .gallery-dots {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 20px;
+    }
+
+    .gallery-dots .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        transition: var(--transition-smooth);
+        cursor: pointer;
+    }
+
+    .gallery-dots .dot.active {
+        background: #ffffff;
+        width: 16px;
+        border-radius: 3px;
+    }
+
+    .gallery-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.45);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        z-index: 2;
+    }
+
+    .gallery-arrow:hover {
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .gallery-arrow svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .gallery-arrow--prev {
+        left: 10px;
+    }
+
+    .gallery-arrow--next {
+        right: 10px;
     }
 
         .product-header {
@@ -308,7 +507,72 @@
             background: rgba(255, 255, 255, 0.02);
         }
 
+        /* PHONE ROW (country code + number) */
+        .phone-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .country-select {
+            flex: 0 0 auto;
+            width: 96px;
+            padding: 16px 8px;
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition-smooth);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .country-select:focus {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .country-select option {
+            background: #0a0e17;
+            color: #fff;
+        }
+
+        .phone-row .smooth-caret-wrap {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        /* SMOOTH CARET */
+        .smooth-caret-wrap {
+            position: relative;
+        }
+        .smooth-caret-wrap input {
+            caret-color: transparent;
+        }
+        .smooth-caret-measure {
+            position: absolute;
+            top: 0;
+            left: 0;
+            visibility: hidden;
+            white-space: pre;
+        }
+        .smooth-caret-bar {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 1px;
+            height: 1em;
+            background: var(--text-main);
+            opacity: 0;
+            transform: translate(0, -50%);
+            transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.15s ease;
+            pointer-events: none;
+        }
+
         .btn {
+            position: relative;
+            overflow: hidden;
             width: 100%;
             padding: 18px;
             background: #ffffff;
@@ -325,8 +589,102 @@
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px) scale(1.015);
+        }
+
+        /* Single line running around the button border, monotone black, on hover only.
+           Animates the gradient's angle (not a transform), so the ring stays locked
+           to the button's actual edges instead of swinging through the interior. */
+        @property --border-angle {
+            syntax: '<angle>';
+            inherits: false;
+            initial-value: 0deg;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1.5px;
+            background: conic-gradient(from var(--border-angle), transparent 0%, transparent 82%, #000000 92%, transparent 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
+            animation: rotate-border-line 3s linear infinite;
+        }
+
+        @keyframes rotate-border-line {
+            to { --border-angle: 360deg; }
+        }
+
+        /* Letter-reveal: grey overlay (idle look) slides away on hover,
+           revealing the white base with the label dropping in letter by letter. */
+        .btn-original {
+            background: #9a9a9a;
+            color: #000;
+            display: grid;
+            inset: 0;
+            place-content: center;
+            position: absolute;
+            transition: transform 0.2s cubic-bezier(0.87, 0, 0.13, 1);
+        }
+
+        .btn:hover .btn-original {
+            transform: translateY(100%);
+        }
+
+        .btn-letters {
+            display: inline-flex;
+        }
+
+        .btn-letters span {
+            display: inline-block;
+            white-space: pre;
+            opacity: 0;
+            transform: translateY(-15px);
+            transition: transform 0.2s cubic-bezier(0.87, 0, 0.13, 1), opacity 0.2s;
+            transition-delay: calc(var(--i, 0) * 0.03s);
+        }
+
+        .btn-letters span:nth-child(2n) {
+            transform: translateY(15px);
+        }
+
+        .btn:hover .btn-letters span {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .btn-dots span {
+            animation: btnDotPulse 1s ease-in-out infinite;
+        }
+
+        .btn-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .btn-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes btnDotPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .confetti-piece {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
         }
 
         .spam-notice {
@@ -372,6 +730,26 @@
             color: var(--text-muted);
         }
 
+        .link-underline {
+            position: relative;
+            display: inline-block;
+        }
+
+        .link-underline::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .footer-links a:hover .link-underline::after {
+            width: 100%;
+        }
+
         footer p {
             font-size: 0.7rem;
             letter-spacing: 0.2em;
@@ -386,7 +764,10 @@
         }
         
         @media (max-width: 480px) {
-            .timer-grid { 
+            .text-roll.roll-ready {
+                font-size: 1.4rem;
+            }
+            .timer-grid {
                 grid-template-columns: repeat(4, 1fr); 
                 gap: 8px; 
             }
@@ -398,9 +779,9 @@
                 padding: 16px 6px; 
                 border-radius: 8px; 
             }
-            .time-box span { 
-                font-size: 1.2rem; 
-                margin-bottom: 6px; 
+            .time-box .digit-group {
+                font-size: 1.2rem;
+                margin-bottom: 6px;
             }
             .time-box label { 
                 font-size: 0.4rem; 
@@ -417,6 +798,14 @@
             .product-card p {
                 font-size: 0.6rem;
             }
+            .gallery-arrow {
+                width: 26px;
+                height: 26px;
+            }
+            .gallery-arrow svg {
+                width: 12px;
+                height: 12px;
+            }
         }
     </style>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
@@ -427,28 +816,30 @@
 <body>
 
     <nav>
-        <img src="images/logo01.png" alt="CLONE™ Logo" class="nav-logo-img">
+        <div class="nav-logo-wrap">
+            <img src="images/logo01.png" alt="CLONE™ Logo" class="nav-logo-img">
+        </div>
     </nav>
 
     <section class="countdown-section container">
         <span class="sub-label">THE DROP</span>
-        <h2>Launching in</h2>
+        <h2 class="text-roll">Launching in</h2>
         
         <div class="timer-grid">
             <div class="time-box">
-                <span id="days">00</span>
+                <span id="days" class="digit-group"></span>
                 <label>Days</label>
             </div>
             <div class="time-box">
-                <span id="hours">00</span>
+                <span id="hours" class="digit-group"></span>
                 <label>Hours</label>
             </div>
             <div class="time-box">
-                <span id="minutes">00</span>
+                <span id="minutes" class="digit-group"></span>
                 <label>Minutes</label>
             </div>
             <div class="time-box">
-                <span id="seconds">00</span>
+                <span id="seconds" class="digit-group"></span>
                 <label>Seconds</label>
             </div>
         </div>
@@ -456,12 +847,31 @@
 
     <section class="collection-section container">
         <span class="sub-label">FIRST COLLECTION</span>
-        <h2>Crafted for the few</h2>
+        <h2 class="text-roll">Crafted for the few</h2>
         <p>Two silhouettes<br>One signature<br>Hand finished in limited runs<br>Individually numbered</p>
 
         <div class="collection-grid">
             <a href="https://shop.cloneclothing.com/products/signature-cap-midnight" target="_blank" rel="noopener noreferrer" class="product-card">
-                <img src="images/cap01.png" alt="Signature Cap Midnight" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=500&q=80'">
+                <div class="product-gallery">
+                    <div class="gallery-clip">
+                        <div class="gallery-track">
+                            <img src="images/Clone%20Navy%20Front.png" alt="Signature Cap Midnight - front" class="gallery-slide" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=500&q=80'">
+                            <img src="images/Clone%20Navy%20Side.png" alt="Signature Cap Midnight - side" class="gallery-slide" loading="lazy" onerror="this.onerror=null;this.src='images/Clone%20Navy%20Front.png'">
+                            <img src="images/Clone%20Navy%20Back.png" alt="Signature Cap Midnight - back" class="gallery-slide" loading="lazy" onerror="this.onerror=null;this.src='images/Clone%20Navy%20Front.png'">
+                        </div>
+                    </div>
+                    <button type="button" class="gallery-arrow gallery-arrow--prev" aria-label="Previous photo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 6 9 12 15 18"></polyline></svg>
+                    </button>
+                    <button type="button" class="gallery-arrow gallery-arrow--next" aria-label="Next photo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+                    </button>
+                </div>
+                <div class="gallery-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
                 <div class="product-header">
                     <h3>Signature Cap<br>Midnight</h3>
                     <span class="status-soon">SOON</span>
@@ -470,7 +880,26 @@
             </a>
 
             <a href="https://shop.cloneclothing.com/products/signature-cap-fog" target="_blank" rel="noopener noreferrer" class="product-card">
-                <img src="images/cap02.png" alt="Signature Cap Fog" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=500&q=80'">
+                <div class="product-gallery">
+                    <div class="gallery-clip">
+                        <div class="gallery-track">
+                            <img src="images/Clone%20Grey%20Front.png" alt="Signature Cap Fog - front" class="gallery-slide" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=500&q=80'">
+                            <img src="images/Clone%20Grey%20Side.png" alt="Signature Cap Fog - side" class="gallery-slide" loading="lazy" onerror="this.onerror=null;this.src='images/Clone%20Grey%20Front.png'">
+                            <img src="images/Clone%20Grey%20Back.png" alt="Signature Cap Fog - back" class="gallery-slide" loading="lazy" onerror="this.onerror=null;this.src='images/Clone%20Grey%20Front.png'">
+                        </div>
+                    </div>
+                    <button type="button" class="gallery-arrow gallery-arrow--prev" aria-label="Previous photo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 6 9 12 15 18"></polyline></svg>
+                    </button>
+                    <button type="button" class="gallery-arrow gallery-arrow--next" aria-label="Next photo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+                    </button>
+                </div>
+                <div class="gallery-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
                 <div class="product-header">
                     <h3>Signature Cap<br>Fog</h3>
                     <span class="status-soon">SOON</span>
@@ -483,36 +912,54 @@
     <section class="waitlist-section container">
         <div class="waitlist-intro">
             <span class="sub-label">JOIN CLONE™</span>
-            <h2>Reserve your access</h2>
+            <h2 class="text-roll">Reserve your access</h2>
             <p>Limited spots. Once the list closes, the drop goes live to members first.</p>
         </div>
 
         <div class="form-card">
             <span class="sub-label" style="text-align: center;">Private Waitlist</span>
-            <h3>Secure your access</h3>
+            <h3 class="text-roll">Secure your access</h3>
             
             <form id="waitlistForm">
                 <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" id="fullName" placeholder="Your name" required minlength="2">
-                </div>
-                
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="email" placeholder="you@domain.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Mobile Number</label>
-                    <input type="tel" id="mobile" placeholder="+91 00000 00000" required pattern="[+\d\s\-]{7,15}">
+                    <div class="smooth-caret-wrap">
+                        <input type="text" id="fullName" placeholder="Your name" required minlength="2">
+                        <span class="smooth-caret-measure" aria-hidden="true"></span>
+                        <span class="smooth-caret-bar"></span>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn" id="submitBtn">JOIN THE WAITLIST</button>
+                <div class="form-group">
+                    <label>Email</label>
+                    <div class="smooth-caret-wrap">
+                        <input type="email" id="email" placeholder="you@domain.com" required>
+                        <span class="smooth-caret-measure" aria-hidden="true"></span>
+                        <span class="smooth-caret-bar"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <div class="phone-row">
+                        <select id="countryCode" class="country-select" aria-label="Country code"></select>
+                        <div class="smooth-caret-wrap">
+                            <input type="tel" id="mobile" placeholder="00000 00000" required inputmode="numeric">
+                            <span class="smooth-caret-measure" aria-hidden="true"></span>
+                            <span class="smooth-caret-bar"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">
+                    <span class="btn-original">JOIN THE WAITLIST</span>
+                    <span class="btn-letters" aria-hidden="true"><span style="--i:0">J</span><span style="--i:1">O</span><span style="--i:2">I</span><span style="--i:3">N</span><span style="--i:4"> </span><span style="--i:5">T</span><span style="--i:6">H</span><span style="--i:7">E</span><span style="--i:8"> </span><span style="--i:9">W</span><span style="--i:10">A</span><span style="--i:11">I</span><span style="--i:12">T</span><span style="--i:13">L</span><span style="--i:14">I</span><span style="--i:15">S</span><span style="--i:16">T</span></span>
+                </button>
                 <span class="spam-notice">No spam. Early access only.</span>
             </form>
 
             <div id="successMessage" class="success-message">
-                <h3>You're on the list.</h3>
+                <h3 class="text-roll">You're on the list.</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem;">Your exclusive access is secured.</p>
             </div>
         </div>
@@ -523,7 +970,7 @@
             <div class="footer-links">
                 <a href="https://instagram.com/cloneclothing__" target="_blank" rel="noopener noreferrer" class="sub-label" style="text-decoration:none;border:none;color:var(--text-muted);margin-bottom:0;display:inline-flex;align-items:center;gap:8px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-                    INSTAGRAM
+                    <span class="link-underline">INSTAGRAM</span>
                 </a>
             </div>
             <p>© 2026 CLONE™ — ALL RIGHTS RESERVED</p>
@@ -531,7 +978,7 @@
     </footer>
 
     <script>
-        const targetDateStr = "2026-07-16T00:00:00+05:30";
+        const targetDateStr = "2026-07-21T00:00:00+05:30";
         const dropDate = new Date(targetDateStr).getTime();
 
         function updateTimer() {
@@ -539,10 +986,10 @@
             const distance = dropDate - now;
 
             if (distance < 0) {
-                document.getElementById("days").innerText = "00";
-                document.getElementById("hours").innerText = "00";
-                document.getElementById("minutes").innerText = "00";
-                document.getElementById("seconds").innerText = "00";
+                setTimeValue("days", 0);
+                setTimeValue("hours", 0);
+                setTimeValue("minutes", 0);
+                setTimeValue("seconds", 0);
                 clearInterval(timerInterval);
                 return;
             }
@@ -552,14 +999,326 @@
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById("days").innerText = days.toString().padStart(2, '0');
-            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
-            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
-            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+            setTimeValue("days", days);
+            setTimeValue("hours", hours);
+            setTimeValue("minutes", minutes);
+            setTimeValue("seconds", seconds);
+        }
+
+        function rollDigit(box, char) {
+            const current = box.querySelector('.digit:not(.leaving)');
+            if (current && current.textContent === char) return;
+
+            const incoming = document.createElement('span');
+            incoming.className = 'digit entering';
+            incoming.textContent = char;
+            box.appendChild(incoming);
+            void incoming.offsetWidth; // force reflow so the entering transition plays
+            incoming.classList.remove('entering');
+
+            if (current) {
+                current.classList.add('leaving');
+                current.addEventListener('transitionend', () => current.remove(), { once: true });
+            }
+        }
+
+        function setTimeValue(id, value) {
+            const group = document.getElementById(id);
+            const text = value.toString().padStart(2, '0');
+            let boxes = group.querySelectorAll('.digit-box');
+
+            if (boxes.length !== text.length) {
+                group.innerHTML = '';
+                boxes = [...text].map(() => {
+                    const box = document.createElement('span');
+                    box.className = 'digit-box';
+                    group.appendChild(box);
+                    return box;
+                });
+            }
+
+            [...text].forEach((ch, i) => rollDigit(boxes[i], ch));
         }
 
         const timerInterval = setInterval(updateTimer, 1000);
         updateTimer();
+
+        const GALLERY_AUTOPLAY_DELAY = 3500; // ms between auto-advance (~3-4s)
+
+        document.querySelectorAll('.product-card').forEach((card) => {
+            const track = card.querySelector('.gallery-track');
+            const dots = Array.from(card.querySelectorAll('.gallery-dots .dot'));
+            if (!track || !dots.length) return;
+
+            let autoplayTimer = null;
+
+            function currentIndex() {
+                return Math.round(track.scrollLeft / track.clientWidth);
+            }
+
+            function updateActiveDot() {
+                const index = currentIndex();
+                dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            }
+
+            function goToSlide(index) {
+                const wrapped = (index + dots.length) % dots.length;
+                track.scrollTo({ left: wrapped * track.clientWidth, behavior: 'smooth' });
+            }
+
+            function startAutoplay() {
+                stopAutoplay();
+                autoplayTimer = setInterval(() => {
+                    goToSlide(currentIndex() + 1);
+                }, GALLERY_AUTOPLAY_DELAY);
+            }
+
+            function stopAutoplay() {
+                if (autoplayTimer) {
+                    clearInterval(autoplayTimer);
+                    autoplayTimer = null;
+                }
+            }
+
+            let scrollRAF = null;
+            track.addEventListener('scroll', () => {
+                if (scrollRAF) cancelAnimationFrame(scrollRAF);
+                scrollRAF = requestAnimationFrame(updateActiveDot);
+            }, { passive: true });
+
+            // Manual interaction pauses autoplay so it never fights a swipe/drag in progress
+            track.addEventListener('pointerdown', stopAutoplay);
+            track.addEventListener('pointerup', startAutoplay);
+            track.addEventListener('mouseenter', stopAutoplay);
+            track.addEventListener('mouseleave', startAutoplay);
+
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    goToSlide(i);
+                    startAutoplay();
+                });
+            });
+
+            const prevBtn = card.querySelector('.gallery-arrow--prev');
+            const nextBtn = card.querySelector('.gallery-arrow--next');
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    goToSlide(currentIndex() - 1);
+                    startAutoplay();
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    goToSlide(currentIndex() + 1);
+                    startAutoplay();
+                });
+            }
+
+            startAutoplay();
+        });
+
+        // TEXT ROLL (headings) — CSS :hover drives it on desktop; touch devices tap instead
+        const ROLL_STAGGER = 0.035;
+        const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        document.querySelectorAll('.text-roll').forEach((el) => {
+            const text = el.textContent;
+            const center = (text.length - 1) / 2;
+            const buildRow = (extraClass) => {
+                const row = document.createElement('span');
+                row.className = `roll-row ${extraClass}`;
+                [...text].forEach((ch, i) => {
+                    const letter = document.createElement('span');
+                    letter.className = 'roll-letter';
+                    letter.textContent = ch;
+                    letter.style.transitionDelay = `${ROLL_STAGGER * Math.abs(i - center)}s`;
+                    row.appendChild(letter);
+                });
+                return row;
+            };
+            el.textContent = '';
+            el.appendChild(buildRow('roll-row-top'));
+            el.appendChild(buildRow('roll-row-bottom'));
+            el.classList.add('roll-ready');
+
+            if (!canHover) {
+                el.addEventListener('click', () => {
+                    el.classList.add('roll-active');
+                    setTimeout(() => el.classList.remove('roll-active'), 1000);
+                });
+            }
+        });
+
+        // SMOOTH CARET (waitlist form inputs)
+        document.querySelectorAll('.smooth-caret-wrap').forEach((wrap) => {
+            const input = wrap.querySelector('input');
+            const measure = wrap.querySelector('.smooth-caret-measure');
+            const bar = wrap.querySelector('.smooth-caret-bar');
+            if (!input || !measure || !bar) return;
+
+            const syncFont = () => {
+                const styles = window.getComputedStyle(input);
+                measure.style.font = styles.font;
+                measure.style.letterSpacing = styles.letterSpacing;
+            };
+
+            const widthOf = (text) => {
+                measure.textContent = text;
+                return measure.offsetWidth;
+            };
+
+            const updateCaret = () => {
+                const caretIndex = input.selectionStart ?? input.value.length;
+                const totalWidth = widthOf(input.value);
+                const beforeWidth = widthOf(input.value.slice(0, caretIndex));
+                const startX = (input.clientWidth - totalWidth) / 2;
+                bar.style.transform = `translate(${startX + beforeWidth}px, -50%)`;
+            };
+
+            syncFont();
+            ['input', 'click', 'keyup', 'select'].forEach((evt) => {
+                input.addEventListener(evt, updateCaret);
+            });
+            input.addEventListener('focus', () => {
+                bar.style.opacity = '1';
+                updateCaret();
+            });
+            input.addEventListener('blur', () => {
+                bar.style.opacity = '0';
+            });
+            window.addEventListener('resize', () => {
+                if (document.activeElement === input) updateCaret();
+            });
+        });
+
+        // COUNTRY CODE + PER-COUNTRY MOBILE LENGTH VALIDATION
+        // len: exact digit count, or [min, max] for countries with variable-length mobile numbers.
+        // pattern: optional regex the digits must match (real number-plan rule), checked once length is valid.
+        const COUNTRIES = [
+            { n: "India", c: "IN", d: "+91", len: 10, pattern: /^[6-9]\d{9}$/ },
+            { n: "United States", c: "US", d: "+1", len: 10 },
+            { n: "Canada", c: "CA", d: "+1", len: 10 },
+            { n: "United Kingdom", c: "GB", d: "+44", len: 10 },
+            { n: "Australia", c: "AU", d: "+61", len: 9 },
+            { n: "Germany", c: "DE", d: "+49", len: [10, 11] },
+            { n: "France", c: "FR", d: "+33", len: 9 },
+            { n: "China", c: "CN", d: "+86", len: 11 },
+            { n: "Japan", c: "JP", d: "+81", len: 10 },
+            { n: "South Korea", c: "KR", d: "+82", len: 10 },
+            { n: "Brazil", c: "BR", d: "+55", len: 11 },
+            { n: "Russia", c: "RU", d: "+7", len: 10 },
+            { n: "Pakistan", c: "PK", d: "+92", len: 10 },
+            { n: "Bangladesh", c: "BD", d: "+880", len: 10 },
+            { n: "Nigeria", c: "NG", d: "+234", len: 10 },
+            { n: "Indonesia", c: "ID", d: "+62", len: [10, 12] },
+            { n: "Mexico", c: "MX", d: "+52", len: 10 },
+            { n: "Italy", c: "IT", d: "+39", len: [9, 10] },
+            { n: "Spain", c: "ES", d: "+34", len: 9 },
+            { n: "Netherlands", c: "NL", d: "+31", len: 9 },
+            { n: "South Africa", c: "ZA", d: "+27", len: 9 },
+            { n: "United Arab Emirates", c: "AE", d: "+971", len: 9 },
+            { n: "Saudi Arabia", c: "SA", d: "+966", len: 9 },
+            { n: "Singapore", c: "SG", d: "+65", len: 8 },
+            { n: "Malaysia", c: "MY", d: "+60", len: [9, 10] },
+            { n: "Philippines", c: "PH", d: "+63", len: 10 },
+            { n: "Vietnam", c: "VN", d: "+84", len: [9, 10] },
+            { n: "Thailand", c: "TH", d: "+66", len: 9 },
+            { n: "Turkey", c: "TR", d: "+90", len: 10 },
+            { n: "Egypt", c: "EG", d: "+20", len: 10 },
+            { n: "Kenya", c: "KE", d: "+254", len: 9 },
+            { n: "Sri Lanka", c: "LK", d: "+94", len: 9 },
+            { n: "Nepal", c: "NP", d: "+977", len: 10 },
+            { n: "New Zealand", c: "NZ", d: "+64", len: [8, 9] },
+            { n: "Sweden", c: "SE", d: "+46", len: 9 },
+            { n: "Norway", c: "NO", d: "+47", len: 8 },
+            { n: "Denmark", c: "DK", d: "+45", len: 8 },
+            { n: "Finland", c: "FI", d: "+358", len: [9, 10] },
+            { n: "Poland", c: "PL", d: "+48", len: 9 },
+            { n: "Switzerland", c: "CH", d: "+41", len: 9 },
+            { n: "Austria", c: "AT", d: "+43", len: [10, 11] },
+            { n: "Belgium", c: "BE", d: "+32", len: 9 },
+            { n: "Portugal", c: "PT", d: "+351", len: 9 },
+            { n: "Greece", c: "GR", d: "+30", len: 10 },
+            { n: "Ireland", c: "IE", d: "+353", len: 9 },
+            { n: "Israel", c: "IL", d: "+972", len: 9 },
+            { n: "Argentina", c: "AR", d: "+54", len: 10 },
+            { n: "Chile", c: "CL", d: "+56", len: 9 },
+            { n: "Colombia", c: "CO", d: "+57", len: 10 },
+            { n: "Peru", c: "PE", d: "+51", len: 9 },
+            { n: "Ukraine", c: "UA", d: "+380", len: 9 },
+            { n: "Iraq", c: "IQ", d: "+964", len: 10 },
+            { n: "Iran", c: "IR", d: "+98", len: 10 },
+            { n: "Qatar", c: "QA", d: "+974", len: 8 },
+            { n: "Kuwait", c: "KW", d: "+965", len: 8 },
+            { n: "Oman", c: "OM", d: "+968", len: 8 },
+            { n: "Bahrain", c: "BH", d: "+973", len: 8 },
+            { n: "Hong Kong", c: "HK", d: "+852", len: 8 },
+            { n: "Taiwan", c: "TW", d: "+886", len: 9 },
+            { n: "Myanmar", c: "MM", d: "+95", len: [9, 10] },
+            { n: "Afghanistan", c: "AF", d: "+93", len: 9 },
+        ];
+
+        const isoToFlag = (iso) => iso.toUpperCase().replace(/./g, (ch) =>
+            String.fromCodePoint(127397 + ch.charCodeAt(0))
+        );
+
+        const countrySelect = document.getElementById('countryCode');
+        const mobileInput = document.getElementById('mobile');
+
+        COUNTRIES.forEach((country) => {
+            const opt = document.createElement('option');
+            opt.value = country.d;
+            opt.dataset.iso = country.c;
+            opt.textContent = `${isoToFlag(country.c)} ${country.d}`;
+            opt.title = country.n;
+            countrySelect.appendChild(opt);
+        });
+        countrySelect.value = '+91';
+
+        function currentCountry() {
+            return COUNTRIES.find((c) => c.d === countrySelect.value) || COUNTRIES[0];
+        }
+
+        function mobileLengthRule() {
+            const country = currentCountry();
+            return Array.isArray(country.len) ? country.len : [country.len, country.len];
+        }
+
+        function validateMobile() {
+            const digits = mobileInput.value.replace(/\D/g, '');
+            const [min, max] = mobileLengthRule();
+            const expected = min === max ? `${min}` : `${min}-${max}`;
+            const country = currentCountry();
+
+            if (digits.length < min || digits.length > max) {
+                mobileInput.setCustomValidity(`Enter a valid ${expected} digit mobile number`);
+            } else if (/^(\d)\1+$/.test(digits)) {
+                mobileInput.setCustomValidity('Enter a real mobile number');
+            } else if (country.pattern && !country.pattern.test(digits)) {
+                mobileInput.setCustomValidity('Enter a valid mobile number');
+            } else {
+                mobileInput.setCustomValidity('');
+            }
+        }
+
+        function updateMobilePlaceholder() {
+            const [min, max] = mobileLengthRule();
+            mobileInput.placeholder = min === max ? `${min} digit number` : `${min}-${max} digit number`;
+        }
+
+        countrySelect.addEventListener('change', () => {
+            updateMobilePlaceholder();
+            validateMobile();
+        });
+        mobileInput.addEventListener('input', validateMobile);
+        updateMobilePlaceholder();
 
         const form = document.getElementById('waitlistForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -568,12 +1327,52 @@
 
         const SHEETDB_URL = "https://sheetdb.io/api/v1/eipxwenuhv0ue";
 
+        function fireConfetti(btn) {
+            const rect = btn.getBoundingClientRect();
+            const originX = rect.left + rect.width / 2;
+            const originY = rect.top + rect.height / 2;
+            const colors = ['#ffffff', '#000000', 'rgba(0,0,0,0.6)'];
+
+            for (let i = 0; i < 36; i++) {
+                const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 0.9;
+                const distance = 100 + Math.random() * 110;
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+                const size = 6 + Math.random() * 6;
+                const w = size * (0.6 + Math.random() * 1.4);
+                const h = size * (0.4 + Math.random() * 1.2);
+                const rotation = 360 + Math.random() * 720;
+                const startRotate = Math.random() * 360;
+                const radius = Math.random() > 0.7 ? '50%' : `${Math.random() * 3}px`;
+
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.cssText = `width:${w}px;height:${h}px;background:${colors[i % colors.length]};border-radius:${radius};left:${originX}px;top:${originY}px;`;
+                document.body.appendChild(piece);
+
+                const anim = piece.animate([
+                    { transform: `translate(-50%, -50%) rotate(${startRotate}deg)`, offset: 0 },
+                    { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rotation}deg)`, opacity: 1, offset: 0.85 },
+                    { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rotation}deg)`, opacity: 0, offset: 1 }
+                ], { duration: 1400, delay: Math.random() * 60, easing: 'cubic-bezier(0.2, 0.9, 0.2, 1)', fill: 'forwards' });
+
+                anim.onfinish = () => piece.remove();
+            }
+        }
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            validateMobile();
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
             if (resetTimer) { clearTimeout(resetTimer); resetTimer = null; }
 
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = 'PROCESSING...';
+            const originalHTML = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="btn-dots"><span>•</span><span>•</span><span>•</span></span>';
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.7';
 
@@ -583,7 +1382,7 @@
                         "Timestamp": new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }),
                         "Full Name": document.getElementById('fullName').value.trim(),
                         "Email": document.getElementById('email').value.trim(),
-                        "Mobile Number": document.getElementById('mobile').value.trim()
+                        "Mobile Number": `${countrySelect.value.replace('+', '')}${mobileInput.value.replace(/\D/g, '')}`
                     }
                 ]
             };
@@ -605,7 +1404,10 @@
                 const result = await response.json();
 
                 if (response.ok && result.created > 0) {
-                    showSuccess();
+                    submitBtn.style.opacity = '1';
+                    submitBtn.innerText = "YOU'RE IN!";
+                    fireConfetti(submitBtn);
+                    setTimeout(showSuccess, 700);
                 } else {
                     throw new Error(result.error || "Header mismatch or restricted access");
                 }
@@ -619,9 +1421,9 @@
                 submitBtn.style.opacity = '1';
                 
                 resetTimer = setTimeout(() => {
-                    submitBtn.innerText = originalText;
-                    submitBtn.style.background = "#ffffff";
-                    submitBtn.style.color = "#000000";
+                    submitBtn.innerHTML = originalHTML;
+                    submitBtn.style.background = "";
+                    submitBtn.style.color = "";
                     resetTimer = null;
                 }, 4000);
             }
